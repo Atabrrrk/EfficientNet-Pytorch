@@ -29,6 +29,7 @@ epoch_to_resume_from = 0
 momentum = 0.9
 project_name = ""
 test_batch_size = 4
+test_only = False
 
 def loaddata(data_dir, batch_size, set_name, shuffle):
     data_transforms = {
@@ -192,8 +193,9 @@ def run():
 
 
     # Modify the fully connected layer
-    num_ftrs = model_ft._fc.in_features
-    model_ft._fc = nn.Linear(num_ftrs, class_num)
+    if weights_loc == None:
+        num_ftrs = model_ft._fc.in_features
+        model_ft._fc = nn.Linear(num_ftrs, class_num)
 
     criterion = nn.CrossEntropyLoss()
 
@@ -204,7 +206,8 @@ def run():
     optimizer = optim.SGD((model_ft.parameters()), lr=lr,
                         momentum=momentum, weight_decay=0.0004)
 
-    train_loss, best_model_wts = train_model(model_ft, criterion, optimizer, exp_lr_scheduler, num_epochs=num_epochs)
+    if not test_only:
+        train_loss, best_model_wts = train_model(model_ft, criterion, optimizer, exp_lr_scheduler, num_epochs=num_epochs)
 
     # test
     print('-' * 10)
@@ -241,7 +244,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--test-batch-size", type=int, default=4, help="batch size for test")
 
-
+    parser.add_argument("--test-only", type=bool, default=False, help="set True if you only want test")
 
     opt = parser.parse_args()
 
@@ -263,9 +266,12 @@ if __name__ == '__main__':
     project_name = opt.project_name
 
     test_batch_size = opt.test_batch_size
+
+    test_only = opt.test_only
     
     print("data dir: ", data_dir, ",  num epochs: ", num_epochs, ",  batch size: ",batch_size,
              ", img size: ", input_size, ", num of classes:", class_num, ".pth weights file location:", weights_loc,
-             ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, ", momentum: ",momentum, ", project name:", project_name,", test batch size:", test_batch_size )
+             ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, ", momentum: ",momentum,
+             ", project name:", project_name,", test batch size:", test_batch_size, ", test only: "test_only)
 
     run()
