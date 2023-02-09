@@ -192,7 +192,7 @@ def run():
         model_ft = EfficientNet.from_pretrained(net_name)
 
 
-    # Modify the fully connected layer
+    # Modify the fully connected layer, if no model going to be loaded
     if weights_loc == None:
         num_ftrs = model_ft._fc.in_features
         model_ft._fc = nn.Linear(num_ftrs, class_num)
