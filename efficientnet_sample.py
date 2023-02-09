@@ -272,6 +272,6 @@ if __name__ == '__main__':
     print("data dir: ", data_dir, ",  num epochs: ", num_epochs, ",  batch size: ",batch_size,
              ", img size: ", input_size, ", num of classes:", class_num, ".pth weights file location:", weights_loc,
              ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, ", momentum: ",momentum,
-             ", project name:", project_name,", test batch size:", test_batch_size, ", test only: "test_only)
+             ", project name:", project_name,", test batch size:", test_batch_size, ", test only: ",test_only)
 
     run()
