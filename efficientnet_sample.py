@@ -192,7 +192,8 @@ def run():
         model_ft = EfficientNet.from_pretrained(net_name)
 
 
-    # Modify the fully connected layer, if no model going to be loaded
+    # Modify the fully connected layer, if model not going to be loaded
+    
     if weights_loc == None:
         num_ftrs = model_ft._fc.in_features
         model_ft._fc = nn.Linear(num_ftrs, class_num)
@@ -208,12 +209,12 @@ def run():
 
     if not test_only:
         train_loss, best_model_wts = train_model(model_ft, criterion, optimizer, exp_lr_scheduler, num_epochs=num_epochs)
+        model_ft.load_state_dict(best_model_wts)
+
 
     # test
     print('-' * 10)
     print('Test Accuracy:')
-
-    model_ft.load_state_dict(best_model_wts)
 
     criterion = nn.CrossEntropyLoss().cuda()
 
@@ -271,7 +272,6 @@ if __name__ == '__main__':
     
     print("data dir: ", data_dir, ",  num epochs: ", num_epochs, ",  batch size: ",batch_size,
              ", img size: ", input_size, ", num of classes:", class_num, ".pth weights file location:", weights_loc,
-             ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, ", momentum: ",momentum,
-             ", project name:", project_name,", test batch size:", test_batch_size, ", test only: ",test_only)
+             ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, ", momentum: ",momentum, ", project name:", project_name,", test batch size:", test_batch_size )
 
     run()
