@@ -27,7 +27,8 @@ lr = 0.01
 net_name = 'efficientnet-b3'
 epoch_to_resume_from = 0
 momentum = 0.9
-
+project_name = ""
+test_batch_size = 4
 
 def loaddata(data_dir, batch_size, set_name, shuffle):
     data_transforms = {
@@ -120,7 +121,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     # save best model
     save_dir = data_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
-    model_out_path = save_dir + "/" + net_name + '.pth'
+    model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
     torch.save(model_ft, model_out_path)
 
     time_elapsed = time.time() - since
@@ -137,7 +138,7 @@ def test_model(model, criterion):
     cont = 0
     outPre = []
     outLabel = []
-    dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=batch_size, set_name='test', shuffle=False)
+    dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
     for data in dset_loaders['test']:
         inputs, labels = data
         labels = torch.squeeze(labels.type(torch.LongTensor))
@@ -235,6 +236,10 @@ if __name__ == '__main__':
     parser.add_argument('--resume-epoch', type=int, default=0, help='what epoch to start from')
 
     parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
+    
+    parser.add_argument("--project-name", type=str, default="", help= "name to save weights")
+
+    parser.add_argument("--test-batch-size", type=int, default=4, help="batch size for test")
 
 
 
@@ -255,6 +260,10 @@ if __name__ == '__main__':
 
     momentum = opt.momentum
 
+    project_name = opt.project_name
+
+    test_batch_size = opt.test_batch_size
+    
     print("data dir: ", data_dir, ",  num epochs: ", num_epochs, ",  batch size: ",batch_size,
              ", img size: ", input_size, ", num of classes:", class_num, ".pth weights file location:", weights_loc,
              ", learning rate:", lr, ", net name:", net_name, "epoch to resume from: ", epoch_to_resume_from, "momen")
