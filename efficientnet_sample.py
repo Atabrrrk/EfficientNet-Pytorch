@@ -59,8 +59,6 @@ def loaddata(data_dir, batch_size, set_name, shuffle):
 
 
 def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
-
-    yo = 0
     
     train_loss = []
     since = time.time()
@@ -69,6 +67,8 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     model_ft.train(True)
 
     for epoch in range(epoch_to_resume_from, num_epochs):
+
+        save = 0
 
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=batch_size, set_name='train', shuffle=True)
         print('Data Size', dset_sizes)
@@ -112,12 +112,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         epoch_loss = running_loss / dset_sizes
         epoch_acc = running_corrects.double() / dset_sizes
 
-        print("Train epoch finished.")
+        print("\nTrain epoch finished.")
 
-        print('Loss: {:.4f} Acc: {:.4f}'.format(
+        print('Loss: {:.4f} Acc: {:.4f}\n'.format(
             epoch_loss, epoch_acc))
-
-        print("Val epoch starting...")
 
         running_loss = 0.0
         running_corrects = 0
@@ -125,12 +123,8 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         outPre = []
         outLabel = []
 
-        print("Fake val starts...")
-        
-        del(dset_loaders)
-
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
-
+        print("\nVal starting...")
         for data in dset_loaders['test']:
             inputs, labels = data
             labels = torch.squeeze(labels.type(torch.LongTensor))
@@ -151,7 +145,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
                                                 running_corrects.double() / dset_sizes))
 
-        print("Fake val finished.")
+        print("Val finished.\n")
 
         del(dset_loaders)
 
@@ -159,10 +153,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             best_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
 
-        yo += 1
+        save += 1
         
-        if yo % 5 == 4:
-            print("regular save...")
+        if save % 5 == 4:
+            print("\nregular save...\n")
             save_dir = data_dir + '/model'
             model_ft.load_state_dict(best_model_wts)
             model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
