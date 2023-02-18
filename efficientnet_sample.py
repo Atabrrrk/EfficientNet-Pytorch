@@ -120,7 +120,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             best_model_wts = model_ft.state_dict()
         yo += 1
         
-        if yo % 20 == 19:
+        if yo % 5 == 4:
             print("regular save...")
             save_dir = data_dir + '/model'
             model_ft.load_state_dict(best_model_wts)
@@ -129,6 +129,8 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         
         if epoch_acc > 0.999:
             break
+
+        test_model(model_ft, criterion)
 
     # save best model
     save_dir = data_dir + '/model'
