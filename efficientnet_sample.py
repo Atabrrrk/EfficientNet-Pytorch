@@ -114,7 +114,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print("\nTrain epoch finished.")
 
-        print('Loss: {:.4f} Acc: {:.4f}\n'.format(
+        print('Loss: {:.4f} Acc: {:.4f}'.format(
             epoch_loss, epoch_acc))
 
         running_loss = 0.0
