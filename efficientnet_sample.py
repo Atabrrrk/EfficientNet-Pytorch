@@ -147,15 +147,18 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
                                                 running_corrects.double() / dset_sizes))
 
         print("Val finished.\n")
+
         val_acc = running_corrects.double() / dset_sizes
+
         if val_acc > best_acc:
+            print("\nnew best model!...\n")
             val_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
 
         save += 1
         
         if save % 5 == 4:
-            print("\nregular save...\n")
+            print("\n saving best model regualarly...\n")
             save_dir = data_dir + '/model'
             model_ft.load_state_dict(best_model_wts)
             model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
