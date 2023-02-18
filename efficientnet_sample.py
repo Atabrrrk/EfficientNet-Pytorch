@@ -90,7 +90,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
             outputs = model_ft(inputs)
             
-            if count % 360 == 0:
+            if count % 1200 == 0:
                 print(outputs)
                 print(labels)
             
@@ -151,7 +151,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         val_acc = running_corrects.double() / dset_sizes
 
         if val_acc > best_acc:
-            print("\nnew best model!...\n")
+            print("new best model!...\n")
             val_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
 
