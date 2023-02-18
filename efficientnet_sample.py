@@ -112,8 +112,44 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         epoch_loss = running_loss / dset_sizes
         epoch_acc = running_corrects.double() / dset_sizes
 
+        print("Train epoch finished.")
+
         print('Loss: {:.4f} Acc: {:.4f}'.format(
             epoch_loss, epoch_acc))
+
+        print("Val epoch starting...")
+
+        running_loss = 0.0
+        running_corrects = 0
+        cont = 0
+        outPre = []
+        outLabel = []
+
+        print("Fake val starts...")
+        
+        dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
+
+        for data in dset_loaders['test']:
+            inputs, labels = data
+            labels = torch.squeeze(labels.type(torch.LongTensor))
+            inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+            outputs = model_ft(inputs)
+            _, preds = torch.max(outputs.data, 1)
+            loss = criterion(outputs, labels)
+            if cont == 0:
+                outPre = outputs.data.cpu()
+                outLabel = labels.data.cpu()
+            else:
+                outPre = torch.cat((outPre, outputs.data.cpu()), 0)
+                outLabel = torch.cat((outLabel, labels.data.cpu()), 0)
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+            cont += 1
+
+        print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
+                                                running_corrects.double() / dset_sizes))
+
+
 
         if epoch_acc > best_acc:
             best_acc = epoch_acc
@@ -129,8 +165,6 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         
         if epoch_acc > 0.999:
             break
-
-        test_model(model_ft, criterion)
 
     # save best model
     save_dir = data_dir + '/model'
@@ -169,7 +203,7 @@ def test_model(model, criterion):
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
         cont += 1
-    print('Loss: {:.4f} Acc: {:.4f}'.format(running_loss / dset_sizes,
+    print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
                                             running_corrects.double() / dset_sizes))
 
 
