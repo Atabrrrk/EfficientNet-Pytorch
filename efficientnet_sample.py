@@ -124,6 +124,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         outLabel = []
 
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
+
         print("\nVal starting...")
         for data in dset_loaders['test']:
             inputs, labels = data
@@ -146,11 +147,9 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
                                                 running_corrects.double() / dset_sizes))
 
         print("Val finished.\n")
-
-        del(dset_loaders)
-
-        if epoch_acc > best_acc:
-            best_acc = epoch_acc
+        val_acc = running_corrects.double() / dset_sizes
+        if val_acc > best_acc:
+            val_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
 
         save += 1
