@@ -127,6 +127,8 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print("Fake val starts...")
         
+        del(dset_loaders)
+
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
 
         for data in dset_loaders['test']:
@@ -149,11 +151,14 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
                                                 running_corrects.double() / dset_sizes))
 
+        print("Fake val finished.")
 
+        del(dset_loaders)
 
         if epoch_acc > best_acc:
             best_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
+
         yo += 1
         
         if yo % 5 == 4:
