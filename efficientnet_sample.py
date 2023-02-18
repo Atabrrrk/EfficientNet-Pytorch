@@ -159,7 +159,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         save += 1
         
         if save % 5 == 4:
-            print("\n saving best model regularly...\n")
+            print("saving best model regularly...\n")
             save_dir = data_dir + '/model'
             model_ft.load_state_dict(best_model_wts)
             model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
