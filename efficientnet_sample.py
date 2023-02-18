@@ -60,6 +60,8 @@ def loaddata(data_dir, batch_size, set_name, shuffle):
 
 def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
+    yo = 0
+    
     train_loss = []
     since = time.time()
     best_model_wts = model_ft.state_dict()
@@ -116,6 +118,15 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         if epoch_acc > best_acc:
             best_acc = epoch_acc
             best_model_wts = model_ft.state_dict()
+        yo += 1
+        
+        if yo % 20 == 19:
+            print("regular save...")
+            save_dir = data_dir + '/model'
+            model_ft.load_state_dict(best_model_wts)
+            model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
+            torch.save(model_ft, model_out_path)
+        
         if epoch_acc > 0.999:
             break
 
