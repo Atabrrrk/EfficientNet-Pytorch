@@ -90,7 +90,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
             outputs = model_ft(inputs)
             
-            if count % 3000 == 2999:
+            if count % 360 == 0:
                 print(outputs)
                 print(labels)
             
@@ -102,7 +102,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             optimizer.step()
 
             count += 1
-            if count % 300 == 0 or outputs.size()[0] < batch_size:
+            if count % 120 == 0 or outputs.size()[0] < batch_size:
                 print('Epoch:{}: loss:{:.3f}'.format(epoch, loss.item()))
                 train_loss.append(loss.item())
 
