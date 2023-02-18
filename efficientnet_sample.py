@@ -65,10 +65,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     best_model_wts = model_ft.state_dict()
     best_acc = 0.0
     model_ft.train(True)
+    save = 0
+
 
     for epoch in range(epoch_to_resume_from, num_epochs):
-
-        save = 0
 
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=batch_size, set_name='train', shuffle=True)
         print('Data Size', dset_sizes)
@@ -126,6 +126,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
 
         print("\nVal starting...")
+
         for data in dset_loaders['test']:
             inputs, labels = data
             labels = torch.squeeze(labels.type(torch.LongTensor))
@@ -151,8 +152,8 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         val_acc = running_corrects.double() / dset_sizes
 
         if val_acc > best_acc:
-            print("new best model!...\n")
-            val_acc = epoch_acc
+            print("new best model!...\n with former accuracy of {:.4f} surpassed by {:.4f}".format(best_acc, val_acc))
+            best_acc = val_acc
             best_model_wts = model_ft.state_dict()
 
         save += 1
