@@ -177,7 +177,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
             torch.save(model_ft, model_out_path)
         
-        if train_acc > 0.999:
+        if t_acc > 0.999:
             break
 
     # save best model
@@ -239,7 +239,7 @@ def write_to_file(path, loss, acc):
 
     f = open(path, "a+")
     print(loss,acc.float())
-    string ="{:.4f} , {:.4f} \n".format(loss, acc.float()) 
+    string ="{:.4f} , {:.4f} \n".format(loss, acc.float()[0]) 
     f.write(string)
     f.close()
 
