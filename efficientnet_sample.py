@@ -53,7 +53,7 @@ def loaddata(data_dir, batch_size, set_name, shuffle):
     # num_workers=0 if CPU else =1
     dataset_loaders = {x: torch.utils.data.DataLoader(image_datasets[x],
                                                       batch_size=batch_size,
-                                                      shuffle=shuffle, num_workers=1) for x in [set_name]}
+                                                      shuffle=shuffle, num_workers=1, drop_last = True) for x in [set_name]}
     data_set_sizes = len(image_datasets[set_name])
     return dataset_loaders, data_set_sizes
 
