@@ -240,9 +240,9 @@ def write_to_file(path, loss, acc):
     f = open(path, "a+")
     print(loss,acc)
     print(acc.float())
-    print(acc.float().item())
+    print(acc.item())
     string ="{:.4f} , {:.4f} \n".format(loss, acc.float().item())
-     
+
     f.write(string)
     f.close()
 
