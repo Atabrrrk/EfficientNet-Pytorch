@@ -156,10 +156,9 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print('Val Loss: {:.4f} Val Acc: {:.4f}'.format(val_loss, val_acc))
 
-        write_to_file(val_dir, epoch, val_loss, val_acc)
-
         print("Val finished.\n")
 
+        write_to_file(val_dir, epoch, val_loss, val_acc)
 
         if val_acc > best_acc:
             
@@ -235,7 +234,7 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
 
 def write_to_file(path, epoch, loss, acc):
 
-    print(f"\nwriting to file: {path}... ")
+    print(f"\nsaving loss to file: {path}...\n")
 
     f = open(path, "a+")
 
@@ -243,7 +242,7 @@ def write_to_file(path, epoch, loss, acc):
     f.write(string)
 
     f.close()
-    
+
 
 def run():
     # train
