@@ -243,10 +243,7 @@ def write_to_file(path, epoch, loss, acc):
     f.write(string)
 
     f.close()
-
-    print("write successful!...\n")
-    print(string)
-
+    
 
 def run():
     # train
