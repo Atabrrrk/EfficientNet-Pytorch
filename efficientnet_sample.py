@@ -122,7 +122,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         print('Loss: {:.4f} Acc: {:.4f}'.format(
             t_loss, t_acc))
         
-        write_to_file(train_dir, str(t_loss) + " " + str(t_acc))
+        write_to_file(train_dir, t_loss, t_acc.item))
 
         running_loss = 0.0
         running_corrects = 0
@@ -156,7 +156,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print('Val Loss: {:.4f} Val Acc: {:.4f}'.format(val_loss, val_acc))
 
-        write_to_file(val_dir, str(val_loss) + " " + str(val_acc))
+        write_to_file(val_dir, val_loss, val_acc.item)
 
         print("Val finished.\n")
 
@@ -232,10 +232,10 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
     return optimizer
 
 
-def write_to_file(path, num):
-    print(f"\nwriting to file: {path}... "  )
+def write_to_file(path, loss, acc):
+    print(f"\nwriting to file: {path}... ")
     f = open(path, "a+")
-    f.write(num + "\n")
+    f.write("{:.4f} , {:.4f} \n".format(loss, acc))
     f.close()
     print("write successful!...\n")
 
