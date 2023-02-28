@@ -156,7 +156,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print('Val Loss: {:.4f} Val Acc: {:.4f}'.format(val_loss, val_acc))
 
-        write_to_file(val_dir, val_loss, val_acc.item)
+        write_to_file(val_dir, val_loss, val_acc)
 
         print("Val finished.\n")
 
@@ -238,7 +238,7 @@ def write_to_file(path, loss, acc):
 
     f = open(path, "a+")
     print(loss,acc)
-    string ="{:.4f} , {:.4f} \n".format(float(loss), float(acc)) 
+    string ="{:.4f} , {:.4f} \n".format(loss, acc.data[0]) 
     f.write(string)
     f.close()
 
