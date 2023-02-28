@@ -114,15 +114,15 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
 
-        train_loss = running_loss / dset_sizes
-        train_acc = running_corrects.double() / dset_sizes
+        t_loss = running_loss / dset_sizes
+        t_acc = running_corrects.double() / dset_sizes
 
         print("\nTrain epoch finished.")
 
         print('Loss: {:.4f} Acc: {:.4f}'.format(
-            train_loss, train_acc))
+            t_loss, t_acc))
         
-        write_to_file(train_dir, str(train_loss) + " " + str(train_acc))
+        write_to_file(train_dir, str(t_loss) + " " + str(t_acc))
 
         running_loss = 0.0
         running_corrects = 0
@@ -233,7 +233,7 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
 
 
 def write_to_file(path, num):
-    print(f"writing to file: {path}... "  )
+    print(f"\nwriting to file: {path}... "  )
     f = open(path, "a+")
     f.write(num + "\n")
     f.close()
