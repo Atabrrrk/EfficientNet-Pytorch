@@ -132,7 +132,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         dset_loaders, dset_sizes = loaddata(data_dir=data_dir, batch_size=test_batch_size, set_name='test', shuffle=False)
 
-        print("\nVal starting...\n")
+        print("\nVal starting...")
 
         for data in dset_loaders['test']:
             inputs, labels = data
@@ -232,7 +232,7 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
 
 def write_to_file(path, epoch, loss, acc):
 
-    print(f"\nsaving loss to file: {path}...")
+    print(f"\nsaving loss to file: {path}...\n")
 
     f = open(path, "a+")
 
