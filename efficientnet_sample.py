@@ -122,7 +122,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         print('Loss: {:.4f} Acc: {:.4f}'.format(
             t_loss, t_acc))
         
-        write_to_file(train_dir, t_loss, t_acc.item))
+        write_to_file(train_dir, t_loss, t_acc.item)
 
         running_loss = 0.0
         running_corrects = 0
