@@ -237,10 +237,10 @@ def write_to_file(path, loss, acc):
     print(f"\nwriting to file: {path}... ")
 
     f = open(path, "a+")
-    string ="{:.4f} , {:.4f} \n".format(loss, acc) 
+    string ="{:.4f} , {:.4f} \n".format(str(loss), str(acc)) 
     f.write(string)
     f.close()
-    
+
     print("write successful!...\n")
 
 def run():
