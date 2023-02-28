@@ -31,13 +31,17 @@ project_name = ""
 test_batch_size = 4
 test_only = False
 
+train_dir = ""
+val_dir = ""
+
+
 def loaddata(data_dir, batch_size, set_name, shuffle):
     data_transforms = {
         'train': transforms.Compose([
             transforms.Resize(input_size),
             transforms.CenterCrop(input_size),
-            transforms.RandomAffine(degrees=0, translate=(0.05, 0.05)),
-            transforms.RandomHorizontalFlip(),
+    #        transforms.RandomAffine(degrees=0, translate=(0.05, 0.05)),
+    #        transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
@@ -64,6 +68,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     since = time.time()
     best_model_wts = model_ft.state_dict()
     best_acc = 0.0
+    best_acc_epoch = 0
     model_ft.train(True)
     save = 0
 
@@ -109,13 +114,15 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
 
-        epoch_loss = running_loss / dset_sizes
-        epoch_acc = running_corrects.double() / dset_sizes
+        train_loss = running_loss / dset_sizes
+        train_acc = running_corrects.double() / dset_sizes
 
         print("\nTrain epoch finished.")
 
         print('Loss: {:.4f} Acc: {:.4f}'.format(
-            epoch_loss, epoch_acc))
+            train_loss, train_acc))
+        
+        write_to_file(train_dir, str(train_loss) + " " + str(train_acc))
 
         running_loss = 0.0
         running_corrects = 0
@@ -144,15 +151,20 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             running_corrects += torch.sum(preds == labels.data)
             cont += 1
 
-        print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
-                                                running_corrects.double() / dset_sizes))
+        val_loss = running_loss / dset_sizes
+        val_acc = running_corrects.double() / dset_sizes
+
+        print('Val Loss: {:.4f} Val Acc: {:.4f}'.format(val_loss, val_acc))
+
+        write_to_file(val_dir, str(val_loss) + " " + str(val_acc))
 
         print("Val finished.\n")
 
-        val_acc = running_corrects.double() / dset_sizes
 
         if val_acc > best_acc:
-            print("new best model!... with former accuracy of {:.4f} surpassed by {:.4f}.\n".format(best_acc, val_acc))
+            
+            print("new best model!... with former accuracy of {:.4f} at epoch: {:.4f}, surpassed by {:.4f} at epoch: {:.4f}!.\n".format(best_acc, epoch, val_acc, best_acc_epoch))
+            best_acc_epoch = epoch
             best_acc = val_acc
             best_model_wts = model_ft.state_dict()
 
@@ -160,18 +172,18 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         
         if save % 5 == 4:
             print("saving best model regularly...\n")
-            save_dir = data_dir + '/model'
+            save_dir = data_dir + '/model/'
             model_ft.load_state_dict(best_model_wts)
-            model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
+            model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
             torch.save(model_ft, model_out_path)
         
-        if epoch_acc > 0.999:
+        if train_acc > 0.999:
             break
 
     # save best model
     save_dir = data_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
-    model_out_path = save_dir + "/" + project_name+ "_" + net_name + '.pth'
+    model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
     torch.save(model_ft, model_out_path)
 
     time_elapsed = time.time() - since
@@ -220,6 +232,12 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
     return optimizer
 
 
+def write_to_file(path, num):
+    f = open(path, ""a+)
+    f.write(num + "\n")
+    f.close()
+
+
 def run():
     # train
     pth_map = {
@@ -238,14 +256,10 @@ def run():
     if weights_loc != None:
         model_ft = torch.load(weights_loc)
     else:
+            # Modify the fully connected layer, if model not going to be loaded
         model_ft = EfficientNet.from_pretrained(net_name)
-
-
-    # Modify the fully connected layer, if model not going to be loaded
-    
-    if weights_loc == None:
         num_ftrs = model_ft._fc.in_features
-        model_ft._fc = nn.Linear(num_ftrs, class_num)
+        model_ft._fc = nn.Linear(num_ftrs, class_num)    
 
     criterion = nn.CrossEntropyLoss()
 
@@ -323,5 +337,8 @@ if __name__ == '__main__':
              ", img size: ", input_size, ", num of classes:", class_num, ", .pth weights file location:", weights_loc,
              ", learning rate:", lr, ", net name:", net_name, ", epoch to resume from: ", epoch_to_resume_from,
              ", momentum: ",momentum, ", project name:", project_name,", test batch size:", test_batch_size)
+    
+    train_dir = data_dir + "/model/train.txt" 
+    val_dir = data_dir + "/model/val.txt"
 
     run()
