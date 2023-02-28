@@ -233,10 +233,14 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=10):
 
 
 def write_to_file(path, loss, acc):
+
     print(f"\nwriting to file: {path}... ")
+
     f = open(path, "a+")
-    f.write("{:.4f} , {:.4f} \n".format(loss, acc))
+    string ="{:.4f} , {:.4f} \n".format(loss, acc) 
+    f.write(string)
     f.close()
+    
     print("write successful!...\n")
 
 def run():
