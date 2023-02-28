@@ -119,10 +119,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         print("\nTrain epoch finished.")
 
-        print('Loss: {:.4f} Acc: {:.4f}'.format(
+        print('Train Loss: {:.4f} Train Acc: {:.4f}'.format(
             t_loss, t_acc))
         
-        write_to_file(train_dir, t_loss, t_acc.item)
+        write_to_file(train_dir, t_loss, t_acc)
 
         running_loss = 0.0
         running_corrects = 0
@@ -217,6 +217,7 @@ def test_model(model, criterion):
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
         cont += 1
+
     print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(running_loss / dset_sizes,
                                             running_corrects.double() / dset_sizes))
 
