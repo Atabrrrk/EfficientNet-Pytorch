@@ -238,8 +238,8 @@ def write_to_file(path, loss, acc):
     print(f"\nwriting to file: {path}... ")
 
     f = open(path, "a+")
-    print(loss,acc)
-    string ="{:.4f} , {:.4f} \n".format(loss, acc) 
+    print(loss,acc.float())
+    string ="{:.4f} , {:.4f} \n".format(loss, acc.float()) 
     f.write(string)
     f.close()
 
