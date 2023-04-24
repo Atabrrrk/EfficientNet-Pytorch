@@ -8,6 +8,7 @@ from torchvision import datasets, models, transforms
 import time
 import os
 from efficientnet.model import EfficientNet
+from tqdm import tqdm
 
 import argparse
 
@@ -84,8 +85,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         running_loss = 0.0
         running_corrects = 0
         count = 0
+        print(('\n' + '%10s' * 3) % ('Epoch', 'gpu_mem', 'Loss'))
+        pbar = tqdm(dset_loaders['train'])
 
-        for data in dset_loaders['train']:
+        for data in pbar:
             inputs, labels = data
             labels = torch.squeeze(labels.type(torch.LongTensor))
             if use_gpu:
@@ -95,10 +98,6 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
             outputs = model_ft(inputs)
             
-            if count % 1200 == 0:
-                print(outputs)
-                print(labels)
-            
             loss = criterion(outputs, labels)
             _, preds = torch.max(outputs.data, 1)
 
@@ -106,6 +105,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             loss.backward()
             optimizer.step()
 
+            mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0)  # (GB)
+            s = f"{epoch}/{num_epochs-1} {mem} {'%.3g' % loss.item()}}"
+            pbar.set_description(s)
+            
             count += 1
             if count % 120 == 0 or outputs.size()[0] < batch_size:
                 print('Epoch:{}: loss:{:.3f}'.format(epoch, loss.item()))
