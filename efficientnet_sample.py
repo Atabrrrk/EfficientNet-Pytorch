@@ -106,7 +106,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             optimizer.step()
 
             mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0)  # (GB)
-            s = f"{epoch}/{num_epochs-1} {mem} {'%.3g' % loss.item()}}"
+            s = f"{epoch}/{num_epochs-1} {mem} {'%.3g' % loss.item()}"
             pbar.set_description(s)
             
             count += 1
