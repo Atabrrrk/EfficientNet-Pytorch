@@ -85,7 +85,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         running_loss = 0.0
         running_corrects = 0
         count = 0
-        print('Epoch   gpu_mem   Loss')
+        print('Epoch gpu_mem Loss')
         pbar = tqdm(dset_loaders['train'])
 
         for data in pbar:
