@@ -19,6 +19,7 @@ print(use_gpu)
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 data_dir = ''
+model_save_dir = ''
 num_epochs = 40
 batch_size = 2
 input_size = 4
@@ -171,7 +172,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         
         if save % 5 == 4:
             print("saving best model regularly...\n")
-            save_dir = data_dir + '/model/'
+            save_dir = model_save_dir + '/model/'
             model_ft.load_state_dict(best_model_wts)
             model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
             torch.save(model_ft, model_out_path)
@@ -180,7 +181,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             break
 
     # save best model
-    save_dir = data_dir + '/model'
+    save_dir = model_save_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
     model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
     torch.save(model_ft, model_out_path)
@@ -296,6 +297,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--data-dir', type=str, default=None, help='path of /dataset/')
+    parser.add_argument('--save-dir', type=str, default=None, help='path of where to save model to')
     parser.add_argument('--num-epochs', type=int, default=40)
     parser.add_argument('--batch-size', type=int, default=4, help='total batch size for all GPUs')
     parser.add_argument('--img-size', type=int, default=[1024, 1024], help='img sizes')
@@ -319,6 +321,7 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     data_dir = opt.data_dir
+    model_save_dir = opt.save_dir
     num_epochs = opt.num_epochs
     batch_size = opt.batch_size
     input_size = opt.img_size
