@@ -105,17 +105,16 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
-            mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0)  # (GB)
-            s = f"{epoch}/{num_epochs-1} {mem} {'%.3g' % loss.item()}"
-            pbar.set_description(s)
-            
             count += 1
             if count % 120 == 0 or outputs.size()[0] < batch_size:
                 train_loss.append(loss.item())
 
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
+            
+            mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0)  # (GB)
+            s = f"{epoch}/{num_epochs-1} {mem} {'%.3g' % (running_loss/count)}"
+            pbar.set_description(s)
 
         t_loss = running_loss / dset_sizes
         t_acc = running_corrects.double() / dset_sizes
@@ -322,6 +321,7 @@ if __name__ == '__main__':
 
     data_dir = opt.data_dir
     model_save_dir = opt.save_dir
+    os.makedirs(model_save_dir + "/model", exist_ok=True)
     num_epochs = opt.num_epochs
     batch_size = opt.batch_size
     input_size = opt.img_size
@@ -347,7 +347,7 @@ if __name__ == '__main__':
              ", learning rate:", lr, ", net name:", net_name, ", epoch to resume from: ", epoch_to_resume_from,
              ", momentum: ",momentum, ", project name:", project_name,", test batch size:", test_batch_size)
     
-    train_dir = data_dir + "/model/train.txt" 
-    val_dir = data_dir + "/model/val.txt"
+    train_dir = model_save_dir + "/model/train.txt" 
+    val_dir = model_save_dir + "/model/val.txt"
 
     run()
