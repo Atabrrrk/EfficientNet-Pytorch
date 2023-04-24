@@ -85,7 +85,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         running_loss = 0.0
         running_corrects = 0
         count = 0
-        print(('\n' + '%10s' * 3) % ('Epoch', 'gpu_mem', 'Loss'))
+        print('Epoch   gpu_mem   Loss')
         pbar = tqdm(dset_loaders['train'])
 
         for data in pbar:
@@ -111,7 +111,6 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             
             count += 1
             if count % 120 == 0 or outputs.size()[0] < batch_size:
-                print('Epoch:{}: loss:{:.3f}'.format(epoch, loss.item()))
                 train_loss.append(loss.item())
 
             running_loss += loss.item() * inputs.size(0)
