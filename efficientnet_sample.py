@@ -173,7 +173,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             print("saving best model regularly...\n")
             save_dir = model_save_dir + '/model/'
             model_ft.load_state_dict(best_model_wts)
-            model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
+            model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc) + '.pth'
             torch.save(model_ft, model_out_path)
         
         if t_acc > 0.999:
@@ -182,7 +182,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     # save best model
     save_dir = model_save_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
-    model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + str(best_acc) + '.pth'
+    model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc) + '.pth'
     torch.save(model_ft, model_out_path)
 
     time_elapsed = time.time() - since
