@@ -72,8 +72,6 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     best_acc = 0.0
     best_acc_epoch = 0
     model_ft.train(True)
-    save = 0
-
 
     for epoch in range(epoch_to_resume_from, num_epochs):
 
@@ -160,29 +158,27 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
 
         write_to_file(val_dir, epoch, val_loss, val_acc)
 
+        # save the latest epoch
+        save_dir = model_save_dir + '/model/'
+        model_out_path = save_dir + 'latest.pth'
+        torch.save(model_ft, model_out_path)
+        
         if val_acc > best_acc:
             
             print("new best model!... with former accuracy of {:.4f} at epoch: {:.4f}, surpassed by {:.4f} at epoch: {:.4f}!.\n".format(best_acc, epoch, val_acc, best_acc_epoch))
+            print("Saving the best model...)
             best_acc_epoch = epoch
             best_acc = val_acc
-            best_model_wts = model_ft.state_dict()
-
-        save += 1
-        
-        if save % 5 == 4:
-            print("saving best model regularly...\n")
-            save_dir = model_save_dir + '/model/'
-            model_ft.load_state_dict(best_model_wts)
-            model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc) + '.pth'
+            model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc.item()) + '.pth'
             torch.save(model_ft, model_out_path)
-        
+
         if t_acc > 0.999:
             break
 
     # save best model
     save_dir = model_save_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
-    model_out_path = save_dir + project_name + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc) + '.pth'
+    model_out_path = save_dir + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc.item()) + '.pth'
     torch.save(model_ft, model_out_path)
 
     time_elapsed = time.time() - since
