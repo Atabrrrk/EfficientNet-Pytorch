@@ -165,7 +165,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         
         if val_acc > best_acc:
             
-            print("new best model!... with former accuracy of {:.4f} at epoch: {:.4f}, surpassed by {:.4f} at epoch: {:.4f}!.\n".format(best_acc, epoch, val_acc, best_acc_epoch))
+            print("new best model!... with former accuracy of {:.4f} at epoch: {:.4f}, surpassed by {:.4f} at epoch: {:.4f}!.\n".format(best_acc, best_acc_epoch, val_acc, epoch))
             best_acc_epoch = epoch
             best_acc = val_acc
             model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch+1) + "_" + "{:.3f}".format(best_acc.item()) + '.pth'
