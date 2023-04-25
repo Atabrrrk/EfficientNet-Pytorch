@@ -166,10 +166,10 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
         if val_acc > best_acc:
             
             print("new best model!... with former accuracy of {:.4f} at epoch: {:.4f}, surpassed by {:.4f} at epoch: {:.4f}!.\n".format(best_acc, epoch, val_acc, best_acc_epoch))
-            print("Saving the best model...")
             best_acc_epoch = epoch
             best_acc = val_acc
-            model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc.item()) + '.pth'
+            model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch+1) + "_" + "{:.3f}".format(best_acc.item()) + '.pth'
+            print(f"Saving the best model with name {model_out_path}")
             torch.save(model_ft, model_out_path)
 
         if t_acc > 0.999:
@@ -178,7 +178,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
     # save best model
     save_dir = model_save_dir + '/model'
     model_ft.load_state_dict(best_model_wts)
-    model_out_path = save_dir + "_" + net_name + "_"+ str(best_acc_epoch) + "_" + str(best_acc.item()) + '.pth'
+    model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch+1) + "_" + "{:.3f}".format(best_acc.item()) + '.pth'
     torch.save(model_ft, model_out_path)
 
     time_elapsed = time.time() - since
