@@ -169,7 +169,7 @@ def train_model(model_ft, criterion, optimizer, lr_scheduler, num_epochs=50):
             best_acc_epoch = epoch
             best_acc = val_acc
             model_out_path = save_dir + net_name + "_"+ str(best_acc_epoch+1) + "_" + "{:.3f}".format(best_acc.item()) + '.pth'
-            print(f"Saving the best model with name {model_out_path}")
+            print(f"Saving the best model with name {model_out_path}\n")
             torch.save(model_ft, model_out_path)
 
         if t_acc > 0.999:
