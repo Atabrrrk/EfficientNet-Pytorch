@@ -242,7 +242,7 @@ def write_to_file(path, epoch, loss, acc):
     f.close()
 
 
-def run():
+def run(optimizer = "SGD"):
     # train
     pth_map = {
         'efficientnet-b0': 'efficientnet-b0-355c32eb.pth',
@@ -368,4 +368,4 @@ if __name__ == '__main__':
     train_dir = model_save_dir + "/model/train.txt" 
     val_dir = model_save_dir + "/model/val.txt"
 
-    run()
+    run(optimizer)
