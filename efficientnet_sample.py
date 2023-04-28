@@ -270,7 +270,7 @@ def run():
         criterion = criterion.cuda()
 
     optimizer = optim.Adam((model_ft.parameters()), lr=lr,
-                        momentum=momentum, weight_decay=0.0004)
+                         weight_decay=0.0004)
 
     if not test_only:
         train_loss, best_model_wts = train_model(model_ft, criterion, optimizer, exp_lr_scheduler, num_epochs=num_epochs)
