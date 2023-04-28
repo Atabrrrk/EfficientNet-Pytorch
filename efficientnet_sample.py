@@ -33,6 +33,8 @@ project_name = ""
 test_batch_size = 4
 test_only = False
 
+optimizer = "SGD"
+
 train_dir = ""
 val_dir = ""
 
@@ -268,10 +270,26 @@ def run():
     if use_gpu:
         model_ft = model_ft.cuda()
         criterion = criterion.cuda()
-
-    optimizer = optim.SGD((model_ft.parameters()), lr=lr,
-                         weight_decay=0.0004)
-
+    
+    
+    if optimizer == "SGD":
+        optimizer = optim.SGD((model_ft.parameters()), lr=lr, momentum=momentum,
+                             weight_decay=0.0004)
+        print("sgd")
+    elif optimizer == "Adam":
+        optimizer = optim.Adam((model_ft.parameters()), lr=lr,
+                             weight_decay=0.0004)
+        print("adam")
+    elif optimizer == "AdamW":
+        optimizer = optim.AdamW((model_ft.parameters()), lr=lr,
+                            weight_decay=0.0004)
+        print("adamw")
+    else:
+        optimizer = optim.SGD((model_ft.parameters()), lr=lr, momentum=momentum,
+                             weight_decay=0.0004)
+        print("sgd default")
+        
+        
     if not test_only:
         train_loss, best_model_wts = train_model(model_ft, criterion, optimizer, exp_lr_scheduler, num_epochs=num_epochs)
         model_ft.load_state_dict(best_model_wts)
@@ -312,9 +330,13 @@ if __name__ == '__main__':
     parser.add_argument("--test-batch-size", type=int, default=4, help="batch size for test")
 
     parser.add_argument("--test-only", type=bool, default=False, help="set True if you only want test")
+    
+    parser.add_argument('--optim', type=str, default="SGD", help='optimizer')
 
     opt = parser.parse_args()
-
+    
+    optimizer = opt.optim
+    
     data_dir = opt.data_dir
     model_save_dir = opt.save_dir
     os.makedirs(model_save_dir + "/model", exist_ok=True)
