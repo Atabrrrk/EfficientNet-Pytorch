@@ -269,7 +269,7 @@ def run():
         model_ft = model_ft.cuda()
         criterion = criterion.cuda()
 
-    optimizer = optim.SGD((model_ft.parameters()), lr=lr,
+    optimizer = optim.ADAM((model_ft.parameters()), lr=lr,
                         momentum=momentum, weight_decay=0.0004)
 
     if not test_only:
