@@ -284,6 +284,10 @@ def run(optimizer = "SGD"):
         optimizer = optim.AdamW((model_ft.parameters()), lr=lr,
                             weight_decay=0.0004)
         print("adamw")
+    elif optimizer == "RMSProp":
+        optimizer = optim.RMSProp((model_ft.parameters()), lr=lr,
+                            weight_decay=0.0004)
+        print("RMSProp")
     else:
         optimizer = optim.SGD((model_ft.parameters()), lr=lr, momentum=momentum,
                              weight_decay=0.0004)
